@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import crossIcon from "../assets/icon-cross.svg";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { useDispatch, useSelector } from "react-redux";
 import boardsSlice from "../redux/boardsSlice";
+import { Button, IconButton, InputLabel, TextField } from "@mui/material";
 
 const AddEditBoardModal = ({ setBoardModalOpen, type }) => {
   const dispatch = useDispatch();
@@ -84,66 +85,70 @@ const AddEditBoardModal = ({ setBoardModalOpen, type }) => {
         <h3 className="text-lg">{type == "edit" ? "Edit" : "Add New"} Board</h3>
 
         <div className="mt-8 flex flex-col space-y-3">
-          <label className="text-sm dark:text-white text-gray-500">
-            Board Columns
-          </label>
-          <input
-            type="text"
-            className="bg-transparent px-4 py-2 rounded-md text-sm border border-gray-600 focus:outline-[#635fc7] 
-          outline-1 ring-0"
+          <TextField
+            id="outlined-basic"
+            label="Board Title"
+            variant="outlined"
             placeholder="e.g Web Design"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            id="board-name-input "
           />
         </div>
 
         <div className="mt-8 flex flex-col space-y-3">
-          <label className="text-sm dark:text-white text-gray-500">
-            Board Columns
-          </label>
+          <InputLabel
+              id="demo-simple-select-label"
+              className="text-sm text-gray-500"
+              >
+              Board Columns
+            </InputLabel>
           {newColumns.map((column, index) => (
             <div className="flex items-center w-full" key={index}>
-              <input
-                type="text"
-                className="bg-transparent flex-grow px-4 py-2 rounded-md text-sm border border-gray-600 
-                focus:outline-[#735fc7]"
+              <TextField
+                id="outlined-basic"
+                label="Board Subtask"
+                variant="outlined"
+                placeholder="e.g Web Design"
                 value={column.name}
+                className="w-full"
                 onChange={(e) => onChange(column.id, e.target.value)}
               />
-              <img
-                src={crossIcon}
-                alt=""
-                className="cursor-pointer m-4"
+              <IconButton
+                size="large"
+                edge="end"
+                color="inherit"
+                aria-label="menu"
+                className="m-4 cursor-pointer"
                 onClick={() => onDelete(column.id)}
-              />
+              >
+                <CloseIcon />
+              </IconButton>
             </div>
           ))}
         </div>
-        <div>
-          <button
-            className="w-full items-center hover:opacity-75 dark:text-[#635fc7] dark:bg-white text-white bg-[#635fc7]
-          py-2 rounded-md mt-2"
+        <div className="mt-3 h-[90px] flex flex-col justify-between">
+          <Button
             onClick={() => {
               setNewColumns((state) => [
                 ...state,
                 { name: "", task: [], id: uuidv4() },
               ]);
             }}
+            variant="contained"
+            className="w-full"
           >
-            + Add new column
-          </button>
-          <button
-            className="w-full items-center hover:opacity-75 relative text-white dark:text-white dark:bg-[#635fc7] 
-          mt-8 bg-[#635fc7]
-          py-2 rounded-md"
+            + Add New Subtask
+          </Button>
+          <Button
             onClick={() => {
               const isValid = validate();
               if (isValid === true) onSubmit(type);
             }}
+            variant="contained"
+            className="w-full mt-8"
           >
             {type === "add" ? "Create New Board" : "Save Changes"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

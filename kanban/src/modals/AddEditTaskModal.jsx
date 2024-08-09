@@ -7,6 +7,18 @@ import crossIcon from "../assets/icon-cross.svg";
 import { useSelector, useDispatch } from "react-redux";
 import boardsSlice from "../redux/boardsSlice";
 
+import CloseIcon from "@mui/icons-material/Close";
+import TextField from "@mui/material/TextField";
+import Textarea from "@mui/joy/Textarea";
+import {
+  Button,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
+
 const AddEditTaskModal = ({
   type,
   device,
@@ -62,11 +74,25 @@ const AddEditTaskModal = ({
   const onSubmit = (type) => {
     if (type === "add") {
       dispatch(
-        boardsSlice.actions.addTask({ title, description, subtasks, status, newColIndex })
+        boardsSlice.actions.addTask({
+          title,
+          description,
+          subtasks,
+          status,
+          newColIndex,
+        })
       );
     } else {
       dispatch(
-        boardsSlice.actions.editTask({ title, description, subtasks, status, taskIndex, pervColIndex, newColIndex })
+        boardsSlice.actions.editTask({
+          title,
+          description,
+          subtasks,
+          status,
+          taskIndex,
+          pervColIndex,
+          newColIndex,
+        })
       );
     }
   };
@@ -95,94 +121,106 @@ const AddEditTaskModal = ({
       >
         <h3 className="text-lg">{type === "edit" ? "Edit" : "Add New"} Task</h3>
         <div className="mt-8 flex flex-col space-y-1">
-          <label className="text-sm dark:text-white to-gray-500">
-            Task Name
-          </label>
-          <input
-            type="text"
+          <InputLabel
+              id="demo-simple-select-label"
+              className="text-sm text-gray-500 mb-2"
+              >
+              Task Name
+            </InputLabel>
+          <TextField
+            id="outlined-basic"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="bg-transparent px-4 py-2 outline-none focus:border-0 rounded-md text-sm border border-gray-600 
-            focus:outline-[#635fc7] ring-0"
-            placeholder="e.g. Take coffee break"
+            label="e.g. Take coffee break"
+            variant="outlined"
+            className="bg-transparent px-4 py-2 outline-none focus:border-0 rounded-md text-sm border dark:bg-white"
           />
         </div>
 
         <div className="mt-8 flex flex-col space-y-1">
-          <label className="text-sm dark:text-white to-gray-500">
-            Description
-          </label>
-          <textarea
-            type="text"
+          <InputLabel
+              id="demo-simple-select-label"
+              className="text-sm text-gray-500"
+              >
+              Description
+            </InputLabel>
+          <Textarea
+            minRows={2}
+            className="bg-transparent px-4 py-2 outline-none focus:border-0 min-h-[200px] rounded-md text-sm border 
+            border-gray-600 ring-0"
+            placeholder="e.g. It's always good to take a break."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="bg-transparent px-4 py-2 outline-none focus:border-0 min-h-[200px] rounded-md text-sm border 
-            border-gray-600 focus:outline-[#635fc7] ring-0 resize-none overflow-y-auto"
-            placeholder="e.g. It's always good to take a break."
-          ></textarea>
+          />
         </div>
 
         <div className="mt-8 flex flex-col space-y-1">
-          <label className="text-sm dark:text-white to-gray-500">
-            SubTasks
-          </label>
+          <InputLabel
+              id="demo-simple-select-label"
+              className="text-sm text-gray-500"
+              >
+              SubTasks
+            </InputLabel>
           {subtasks.map((subtask, index) => (
             <div className="flex items-center w-full" key={index}>
-              <input
-                type="text"
+              <TextField
+                id="outlined-basic"
                 value={subtask.title}
-                className="bg-transparent outline-none border focus:border-0 flex-grow px-4 py-2 rounded-md text-sm 
-                border-gray-600 focus:outline-[#635fc7]"
+                className="bg-transparent outline-none border focus:border-0 flex-grow px-4 py-2 rounded-md text-sm dark:bg-white"
                 placeholder="e.g. Take coffe break"
                 onChange={(e) => {
                   onChange(subtask.id, e.target.value);
                 }}
               />
-              <img
-                src={crossIcon}
-                alt=""
+              <IconButton
+                size="large"
+                edge="end"
+                color="inherit"
+                aria-label="menu"
                 className="m-4 cursor-pointer"
                 onClick={() => onDelete(subtask.id)}
-              />
+              >
+                <CloseIcon />
+              </IconButton>
             </div>
           ))}
-          <button
+          <Button
             onClick={() => {
               setSubTasks((state) => [
                 ...state,
                 { title: "", isCompleted: false, id: uuidv4() },
               ]);
             }}
-            className="w-full items-center dark:text-[#635fc7] dark:bg-white text-white bg-[#635fc7] 
-          py-2 rounded-md"
+            variant="contained"
+            className="w-full items-center text-white py-2 rounded-md"
           >
             + Add New Subtask
-          </button>
+          </Button>
         </div>
 
         <div className="mt-8 flex flex-col space-y-3">
-          <label className="text-sm dark:text-white text-gray-500">
-            Current status
-          </label>
-          <select
-            value={status}
-            onChange={(e) => onChangeStatus(e)}
-            name=""
-            id=""
-            className="select-status flex flex-grow px-4 py-2 rounded-md text-sm bg-transparent 
-            focus:border-0 border border-gray-300 focus:outline-[#635fc7] outline-none"
-          >
-            {columns.map((column, index) => (
-              <option
-                className="dark:bg-[#2b2c37]"
-                value={column.name}
-                key={index}
-              >
-                {column.name}
-              </option>
-            ))}
-          </select>
-          <button
+          <FormControl fullWidth>
+            <InputLabel
+              id="demo-simple-select-label"
+              className="text-sm dark:text-white text-gray-500"
+            >
+              Status
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="status"
+              onChange={(e) => onChangeStatus(e)}
+            >
+              {columns.map((column, index) => (
+                <MenuItem key={index} value={column.name}>
+                  {column.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Button
             onClick={() => {
               const isValid = validate();
               if (isValid) {
@@ -190,10 +228,10 @@ const AddEditTaskModal = ({
                 setOpenAddEditTask(false);
               }
             }}
-            className="w-full items-center text-white bg-[#635fc7] py-2 rounded-md"
+            variant="contained"
           >
             {type === "edit" ? "Save Edit" : "Create Task"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -2,14 +2,7 @@
 
 import { useSelector } from "react-redux";
 
-import { Switch } from "@headlessui/react";
-
-import useDarkMode from "../Hooks/useDarkode";
-
 import boardIcon from "../assets/icon-board.svg";
-import lightIcon from "../assets/icon-light-theme.svg";
-import darkIcon from "../assets/icon-dark-theme.svg";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import boardsSlice from "../redux/boardsSlice";
 
@@ -17,14 +10,6 @@ const HeaderDropdown = ({ setOpenDropdown, setBoardModalOpen }) => {
 
   const dispatch = useDispatch();
 
-  const [colorTheme, setTheme] = useDarkMode();
-  const [darkSide, setDarkSide] = useState(
-    colorTheme === "light" ? true : false
-  );
-  const toggleDarkMode = (checked) => {
-    setTheme(colorTheme);
-    setDarkSide(checked);
-  };
 
   const boards = useSelector((state) => state.boards);
 
@@ -67,23 +52,7 @@ const HeaderDropdown = ({ setOpenDropdown, setBoardModalOpen }) => {
             <p className="text-lg font-bold">Create New Board</p>
           </div>
         </div>
-        <div className="mx-2 p-4 space-x-2 bg-slate-100 dark:bg-[#20212c] flex items-center justify-center rounded-lg">
-          <img src={lightIcon} alt="" />
-          <Switch
-            className={`${
-              darkSide ? "bg-[#635fc7]" : "bg-gray-200"
-            } relative inline-flex h-6 w-11 items-center rounded-full`}
-            checked={darkSide}
-            onChange={toggleDarkMode}
-          >
-            <span
-              className={`${
-                darkSide ? "translate-x-6" : "translate-x-1"
-              } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-            ></span>
-          </Switch>
-          <img src={darkIcon} alt="" />
-        </div>
+        
       </div>
     </div>
   );
