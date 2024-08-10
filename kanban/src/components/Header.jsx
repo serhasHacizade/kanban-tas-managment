@@ -76,29 +76,31 @@ const Header = ({ boardModalOpen, setBoardModalOpen }) => {
                   <h3 className="truncate max-w-[200px] md:text-2xl text-xl font-bold md:ml-20  font-sans">
                     {board.name}
                   </h3>
-                  {openDropDown ? (
-                    <IconButton
-                      size="large"
-                      edge="end"
-                      color="inherit"
-                      aria-label="menu"
-                      className="m-4 cursor-pointer "
-                      onClick={onDropdownClick}
-                    >
-                      <ArrowDropUpIcon />
-                    </IconButton>
-                  ) : (
-                    <IconButton
-                      size="large"
-                      edge="end"
-                      color="inherit"
-                      aria-label="menu"
-                      className="m-4 cursor-pointer "
-                      onClick={onDropdownClick}
-                    >
-                      <ArrowDropDownIcon />
-                    </IconButton>
-                  )}
+                  <div className="md:hidden">
+                    {openDropDown ? (
+                      <IconButton
+                        size="large"
+                        edge="end"
+                        color="inherit"
+                        aria-label="menu"
+                        className="m-4 cursor-pointer "
+                        onClick={onDropdownClick}
+                      >
+                        <ArrowDropUpIcon />
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        size="large"
+                        edge="end"
+                        color="inherit"
+                        aria-label="menu"
+                        className="m-4 cursor-pointer "
+                        onClick={onDropdownClick}
+                      >
+                        <ArrowDropDownIcon />
+                      </IconButton>
+                    )}
+                  </div>
                 </div>
               </div>
             </Typography>

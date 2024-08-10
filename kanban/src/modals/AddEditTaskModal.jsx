@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import crossIcon from "../assets/icon-cross.svg";
 import { useSelector, useDispatch } from "react-redux";
 import boardsSlice from "../redux/boardsSlice";
 
@@ -24,29 +23,30 @@ const AddEditTaskModal = ({
   device,
   setOpenAddEditTask,
   taskIndex,
-  pervColIndex = 0,
+  prevColIndex = 0,
   setIsTaskModelOpen
 }) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [newColIndex, setNewColIndex] = useState(pervColIndex);
+  const [isValid, setIsValid] = useState(true);
+  
+  const board = useSelector((state) =>
+    state.boards.find((board) => board.isActive)
+);
+const [isFirstLoad, setIsFirstLoad] = useState(true);
+const columns = board.columns;
+const col = columns.find((col, index) => index === prevColIndex);
+const [status, setStatus] = useState(columns[prevColIndex].name);
+const [newColIndex, setNewColIndex] = useState(prevColIndex);
 
-  const [subtasks, setSubTasks] = useState([
+const [subtasks, setSubTasks] = useState([
     { title: "", isCompleted: false, id: uuidv4() },
     { title: "", isCompleted: false, id: uuidv4() },
   ]);
-  const [isValid, setIsValid] = useState(true);
 
-  const board = useSelector((state) =>
-    state.boards.find((board) => board.isActive)
-  );
 
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  const columns = board.columns;
-  const [status, setStatus] = useState(columns[pervColIndex].name);
-  const col = columns.find((col, index) => index === pervColIndex);
   const task = col ? col.tasks.find((task, index) => index === taskIndex): []
 
   const onDelete = (id) => {
@@ -77,7 +77,7 @@ const AddEditTaskModal = ({
       return false;
     }
     for (let i = 0; i < subtasks.length; i++) {
-      if (!subtasks[i].name.trim()) {
+      if (!subtasks[i].title.trim()) {
         return false;
       }
     }
@@ -104,7 +104,7 @@ const AddEditTaskModal = ({
           subtasks,
           status,
           taskIndex,
-          pervColIndex,
+          prevColIndex,
           newColIndex,
         })
       );
@@ -212,28 +212,7 @@ const AddEditTaskModal = ({
           </Button>
         </div>
 
-        <div className="mt-8 flex flex-col space-y-3">
-          <FormControl fullWidth>
-            <InputLabel
-              id="demo-simple-select-label"
-              className="text-sm dark:text-white text-gray-500"
-            >
-              Status
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="status"
-              onChange={(e) => onChangeStatus(e)}
-            >
-              {columns.map((column, index) => (
-                <MenuItem key={index} value={column.name}>
-                  {column.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
+        <div className="mt-6 flex flex-col space-y-3">
           <Button
             onClick={() => {
               const isValid = validate();

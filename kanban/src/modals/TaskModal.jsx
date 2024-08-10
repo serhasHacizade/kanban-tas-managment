@@ -122,28 +122,6 @@ const TaskModal = ({ colIndex, taskIndex, setIsTaskModalOpen }) => {
             );
           })}
         </div>
-        <div className="mt-8 flex flex-col space-y-3">
-          <FormControl fullWidth>
-            <InputLabel
-              id="demo-simple-select-label"
-              className="text-sm text-gray-500"
-            >
-              Status
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="status"
-              onChange={onChange}
-            >
-              {columns.map((column, index) => (
-                <MenuItem key={index} value={column.name}>
-                  {column.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
       </div>
       {isDeleteModalOpen && (
         <DeleteModal
@@ -158,7 +136,7 @@ const TaskModal = ({ colIndex, taskIndex, setIsTaskModalOpen }) => {
           setOpenAddEditTask={setIsAddTaskModalOpen}
           type="edit"
           taskIndex={taskIndex}
-          pervColIndex={colIndex}
+          prevColIndex={colIndex}
           setIsTaskModelOpen={setIsTaskModalOpen}
         />
       )}

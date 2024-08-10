@@ -106,7 +106,6 @@ const AddEditBoardModal = ({ setBoardModalOpen, type }) => {
             <div className="flex items-center w-full" key={index}>
               <TextField
                 id="outlined-basic"
-                label="Board Subtask"
                 variant="outlined"
                 placeholder="e.g Web Design"
                 value={column.name}

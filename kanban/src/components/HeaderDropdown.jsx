@@ -2,14 +2,13 @@
 
 import { useSelector } from "react-redux";
 
-import boardIcon from "../assets/icon-board.svg";
 import { useDispatch } from "react-redux";
 import boardsSlice from "../redux/boardsSlice";
+import IconButton from "@mui/material/IconButton";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
 const HeaderDropdown = ({ setOpenDropdown, setBoardModalOpen }) => {
-
   const dispatch = useDispatch();
-
 
   const boards = useSelector((state) => state.boards);
 
@@ -30,29 +29,33 @@ const HeaderDropdown = ({ setOpenDropdown, setBoardModalOpen }) => {
         <div>
           {boards.map((board, index) => (
             <div
-              className={`flex items-baseline dark:text-white space-x-2 px-5 py-4 cursor-pointer ${
+              className={`flex items-center dark:text-white space-x-2 px-5 py-4 cursor-pointer ${
                 board.isActive && "bg-[#635fc7] rounded-r-full text-white mr-8"
               }`}
-              key={index} onClick={() => {
-                dispatch(boardsSlice.actions.setBoardActive({index}))
+              key={index}
+              onClick={() => {
+                dispatch(boardsSlice.actions.setBoardActive({ index }));
               }}
             >
-              <img src={boardIcon} alt="" className="h-4" />
+              <IconButton size="medium" edge="end">
+                <DashboardIcon />
+              </IconButton>
               <p className="text-lg font-bold">{board.name}</p>
             </div>
           ))}
           <div
-            className="flex items-baseline space-x-2 text-[#635fc7] px-5 py-4 cursor-pointer"
+            className="flex items-center space-x-2 text-[#635fc7] px-5 py-4 cursor-pointer"
             onClick={() => {
               setBoardModalOpen(true);
               setOpenDropdown(false);
             }}
           >
-            <img src={boardIcon} alt="" className="h-4" />
+            <IconButton size="medium" edge="end">
+              <DashboardIcon />
+            </IconButton>
             <p className="text-lg font-bold">Create New Board</p>
           </div>
         </div>
-        
       </div>
     </div>
   );
