@@ -10,6 +10,10 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EllipsisMenu from "../components/EllipsisMenu";
 import Subtask from "../components/Subtask";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import boardsSlice from "../redux/boardsSlice";
+
+import DeleteModal from "../modals/DeleteModal";
+import AddEditTaskModal from "./AddEditTaskModal";
 
 const TaskModal = ({ colIndex, taskIndex, setIsTaskModalOpen }) => {
   const dispatch = useDispatch();
@@ -30,22 +34,50 @@ const TaskModal = ({ colIndex, taskIndex, setIsTaskModalOpen }) => {
   const [status, setStatus] = useState(task.status);
   const [newColIndex, setNewColIndex] = useState(columns.indexOf(col));
   const [ellipsisOpen, setEllipsisOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const setOpenEditModal = () => {};
-  const setOpenDeleteModal = () => {};
+  const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
 
-  const onChange = () => {};
+  const setOpenEditModal = () => {
+    setIsAddTaskModalOpen(true);
+    setEllipsisOpen(false);
+  };
+  const setOpenDeleteModal = () => {
+    setEllipsisOpen(false);
+    setIsDeleteModalOpen(true);
+  };
+
+  const onChange = (e) => {
+    setStatus(e.target.value);
+    setNewColIndex(e.target.selectedIndex);
+  };
+
+  const onClose = (e) => {
+    if (e.target !== e.currentTarget) {
+      return;
+    }
+    dispatch(
+      boardsSlice.actions.setTaskStatus({
+        taskIndex,
+        colIndex,
+        newColIndex,
+        status,
+      })
+    );
+    setIsTaskModalOpen(false);
+  };
+
+  const onDeleteBtnClick = () => {
+    dispatch(boardsSlice.actions.deleteTask({ taskIndex, colIndex }));
+    setIsTaskModalOpen(false);
+    setIsDeleteModalOpen(false);
+  };
 
   return (
     <div
       className="fixed right-0 left-0 top-0 bottom-0 px-2 py-4 overflow-scroll no-scrollbar z-50 justify-center 
     items-center flex bg-[#00000080]"
-      onClick={(e) => {
-        if (e.target !== e.currentTarget) {
-          return;
-        }
-        setIsTaskModalOpen(false);
-      }}
+      onClick={onClose}
     >
       <div
         className="no-scrollbar overflow-y-scroll max-h-[95vh] my-auto bg-white text-black 
@@ -96,12 +128,13 @@ const TaskModal = ({ colIndex, taskIndex, setIsTaskModalOpen }) => {
               id="demo-simple-select-label"
               className="text-sm text-gray-500"
             >
-              Current Status
+              Status
             </InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               label="status"
+              onChange={onChange}
             >
               {columns.map((column, index) => (
                 <MenuItem key={index} value={column.name}>
@@ -112,6 +145,23 @@ const TaskModal = ({ colIndex, taskIndex, setIsTaskModalOpen }) => {
           </FormControl>
         </div>
       </div>
+      {isDeleteModalOpen && (
+        <DeleteModal
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          onDeleteBtnClick={onDeleteBtnClick}
+          title={task.title}
+          type="task"
+        />
+      )}
+      {isAddTaskModalOpen && (
+        <AddEditTaskModal
+          setOpenAddEditTask={setIsAddTaskModalOpen}
+          type="edit"
+          taskIndex={taskIndex}
+          pervColIndex={colIndex}
+          setIsTaskModelOpen={setIsTaskModalOpen}
+        />
+      )}
     </div>
   );
 };

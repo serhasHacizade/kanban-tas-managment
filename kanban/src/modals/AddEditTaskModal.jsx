@@ -25,6 +25,7 @@ const AddEditTaskModal = ({
   setOpenAddEditTask,
   taskIndex,
   pervColIndex = 0,
+  setIsTaskModelOpen
 }) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
@@ -40,13 +41,26 @@ const AddEditTaskModal = ({
   const board = useSelector((state) =>
     state.boards.find((board) => board.isActive)
   );
+
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+
   const columns = board.columns;
   const [status, setStatus] = useState(columns[pervColIndex].name);
   const col = columns.find((col, index) => index === pervColIndex);
+  const task = col ? col.tasks.find((task, index) => index === taskIndex): []
 
   const onDelete = (id) => {
     setSubTasks((pervState) => pervState.filter((el) => el.id !== id));
   };
+
+  if (type === "edit" && isFirstLoad) {
+    setSubTasks(task.subtasks.map((subtask) => {
+      return{...subtask, id:uuidv4}
+    }));
+    setTitle(task.title);
+    setDescription(task.description);
+    setIsFirstLoad(false);
+  }
 
   const onChange = (id, newValue) => {
     setSubTasks((pervState) => {
@@ -111,8 +125,8 @@ const AddEditTaskModal = ({
       }}
       className={
         device === "mobile"
-          ? "py-6 px-6 pb-40 absolute overflow-y-scroll left-0 flex right-0 bottom-[-100vh] top-0 bg-[#00000080]"
-          : "py-6 px-6 pb-40 absolute overflow-y-scroll left-0 flex right-0 bottom-0 top-0 bg-[#00000080]"
+          ? "py-6 px-6 pb-10 absolute left-0 flex right-0 bottom-[-25vh] top-0 bg-[#00000080]"
+          : "py-6 px-6 pb-10 absolute left-0 flex right-0 bottom-0 top-0 bg-[#00000080]"
       }
     >
       <div

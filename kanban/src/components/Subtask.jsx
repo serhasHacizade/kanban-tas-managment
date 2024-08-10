@@ -27,7 +27,7 @@ const Subtask = ({ index, taskIndex, colIndex }) => {
     p-3 gap-4 bg-[#f4f7fd]"
     >
       <Checkbox color="secondary" checked={checked} onChange={onChange} />
-      <p className={checked && "line-through opacity-30"}>{subtask.title}</p>
+      <p className={checked ? "line-through opacity-30": ""}>{subtask.title}</p>
     </div>
   );
 };
